@@ -3,16 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Offline Electronic Signature</title>
+    <title>PSH</title>
     <style>
         body, html {
             margin: 0;
             padding: 0;
             overflow: hidden;
             height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
         canvas {
-            display: block;
+            border: 1px solid #000;
             touch-action: none; /* Disable touch scrolling */
         }
         .button-container {
@@ -25,7 +29,7 @@
     </style>
 </head>
 <body>
-    <h1>Draw Your Signature</h1>
+    <h1>kokoni sign please</h1>
     <canvas id="canvas"></canvas>
     <div class="button-container">
         <button onclick="clearCanvas()">Clear</button>
@@ -38,8 +42,8 @@
 
         // Resize canvas to fit window
         function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight - 100; // Leave space for buttons
+            canvas.width = window.innerWidth - 20; // Leave some space for padding
+            canvas.height = window.innerHeight - 150; // Leave space for buttons and heading
         }
 
         window.addEventListener('resize', resizeCanvas);
