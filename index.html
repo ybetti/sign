@@ -2,33 +2,78 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Please Sing Here</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Offline Electronic Signature</title>
     <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            height: 100%;
+        }
         canvas {
-            border: 1px solid #000;
             display: block;
-            margin: 20px auto;
+            touch-action: none; /* Disable touch scrolling */
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 10px;
         }
         button {
-            display: block;
-            margin: 10px auto;
+            margin: 5px;
         }
     </style>
 </head>
 <body>
-    <h1>ここにサインを記入してください</h1>
-    <canvas id="canvas" width="500" height="200"></canvas>
-    <button onclick="clearCanvas()">Clear</button>
-    <button onclick="saveSignature()">Save</button>
+    <h1>Draw Your Signature</h1>
+    <canvas id="canvas"></canvas>
+    <div class="button-container">
+        <button onclick="clearCanvas()">Clear</button>
+        <button onclick="saveSignature()">Save</button>
+    </div>
     <script>
         let canvas = document.getElementById('canvas');
         let ctx = canvas.getContext('2d');
         let isDrawing = false;
 
-        canvas.addEventListener('mousedown', () => isDrawing = true);
-        canvas.addEventListener('mouseup', () => isDrawing = false);
+        // Resize canvas to fit window
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight - 100; // Leave space for buttons
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mouseup', stopDrawing);
         canvas.addEventListener('mousemove', draw);
+
+        // Touch events for mobile devices
+        canvas.addEventListener('touchstart', (e) => {
+            startDrawing(e.touches[0]);
+            e.preventDefault(); // Prevent scrolling
+        });
+        canvas.addEventListener('touchend', () => {
+            stopDrawing();
+        });
+        canvas.addEventListener('touchmove', (e) => {
+            if (isDrawing) {
+                draw(e.touches[0]);
+                e.preventDefault(); // Prevent scrolling
+            }
+        });
+
+        function startDrawing(event) {
+            isDrawing = true;
+            ctx.beginPath();
+            ctx.moveTo(event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop);
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+            ctx.beginPath();
+        }
 
         function draw(event) {
             if (!isDrawing) return;
